@@ -1,5 +1,5 @@
 import flet as ft
-from database import create_table, add_contact, get_contacts
+from database_orig import create_table, add_contact, get_contacts
 
 def main(page: ft.Page):
     page.title = "Flet Contact Book"

@@ -9,12 +9,18 @@ from textual.widgets import (
     Label,
     Static,
 )
+from database_class import Database
 
 class ContactsApp(App):
     CSS_PATH = "textual_app.tcss"
     BINDINGS = [
         ("q", "quit", "Quit")
     ]
+
+    def __init__(self, db):
+        super().__init__()
+        self.db = db
+
     def compose(self):
         yield Header()
         contacts_list = DataTable(classes="contacts-list")
@@ -37,9 +43,16 @@ class ContactsApp(App):
     def on_mount(self):
         self.title = "Textual Contact Book"
 #       self.sub_title = "A Contacts Book App With Textual & Python"
+        self._load_contacts()
+
+    def _load_contacts(self):
+        contacts_list = self.query_one(DataTable)
+        for contact_data in self.db.get_all_contacts():
+            id, *contact = contact_data
+            contacts_list.add_row(*contact, key=id)
 
 def main():
-    app = ContactsApp()
+    app = ContactsApp(db=Database())
     app.run()
 
 if __name__ == "__main__":
